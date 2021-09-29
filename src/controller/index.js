@@ -50,7 +50,7 @@ exports.updateCat = async (req, res)=>{
 
 exports.deleteCat = async(req, res)=>{
     try{
-        await Cat.deleteOne({breed: req.params.breed});
+        await Cat.deleteOne({breed: req.params.breed}); 
         res.status(200).send("Deleted Successfully");
     }catch(error){
        res.status(500).send(error);

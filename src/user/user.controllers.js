@@ -1,19 +1,19 @@
-const{User} = require("./user.model");
-const bcrypt = require("bcryptjs");
+const User = require("./user.model");
+// const bcrypt = require("bcryptjs");
 
 exports.addUser = async(req, res) =>{
     try{
-        console.log("add user function invoked")
         const user = new User(req.body);
         await user.save()
-        res.status(200).send("User added the database");
+        res.status(200).send({user, token: req.token, message: "User added the database"});
     }catch(error){
         res.status(500).send(error);
     }
 };
 exports.loginUser = async(req, res) =>{
     try{
-        res.status(200).send("Login Successfull");
+        const theUser = await User.findOne({username: req.body.username})
+        res.status(200).send({theUser,token: req.token, message: "Login Successfull"});
     }catch(error){
         res.status(500).send(error);
     }
@@ -35,7 +35,20 @@ exports.updateUser = async(req, res) =>{
 };
 exports.deleteUser = async(req, res) =>{
     try{
-        res.status(200).send();
+        const findUser = await User.findOne({username: req.params.name})
+        if(findUser){
+            await User.deleteOne({username: req.params.name})
+            res.status(200).send("deleted successfully");
+        }else{
+            res.status(222).send("User does not exist")
+        }
+    }catch(error){
+        res.status(500).send(error);
+    }
+};
+exports.tokenLogin = (req, res)=>{
+    try{
+        res.status(200).send(req.user)
     }catch(error){
         res.status(500).send(error);
     }
