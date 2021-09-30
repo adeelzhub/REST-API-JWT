@@ -3,6 +3,7 @@ const User = require("./user.model");
 
 exports.addUser = async(req, res) =>{
     try{
+        console.log("addUser invoked")
         const user = new User(req.body);
         await user.save()
         res.status(200).send({user, token: req.token, message: "User added the database"});
